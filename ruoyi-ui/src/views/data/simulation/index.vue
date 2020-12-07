@@ -1,33 +1,28 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="驾驶员姓名" prop="driverName">
+      <el-form-item label="驾驶员编号" prop="did">
         <el-input
-          v-model="queryParams.driverName"
-          placeholder="请输入驾驶员姓名"
+          v-model="queryParams.did"
+          placeholder="请输入驾驶员编号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="驾驶员性别(0男 1女 2未知)" prop="sex">
-        <el-select v-model="queryParams.sex" placeholder="请选择驾驶员性别(0男 1女 2未知)" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="年龄" prop="age">
+      <el-form-item label="车辆类型" prop="cartype">
         <el-input
-          v-model="queryParams.age"
-          placeholder="请输入年龄"
+          v-model="queryParams.cartype"
+          placeholder="请输入车辆类型"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="驾龄" prop="drivingAge">
+      <el-form-item label="实验环境" prop="environment">
         <el-input
-          v-model="queryParams.drivingAge"
-          placeholder="请输入驾龄"
+          v-model="queryParams.environment"
+          placeholder="请输入实验环境"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -46,7 +41,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['data:driver:add']"
+          v-hasPermi="['data:simulation:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -56,7 +51,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['data:driver:edit']"
+          v-hasPermi="['data:simulation:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -66,7 +61,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['data:driver:remove']"
+          v-hasPermi="['data:simulation:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -75,27 +70,20 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['data:driver:export']"
+          v-hasPermi="['data:simulation:export']"
         >导出</el-button>
       </el-col>
 	  <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="driverList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="simulationList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="编号" align="center" prop="id" />
-      <el-table-column label="驾驶员姓名" align="center" prop="driverName" />
-      <el-table-column label="驾驶员性别(0男 1女 2未知)" align="center" prop="sex" />
-      <el-table-column label="年龄" align="center" prop="age" />
-      <el-table-column label="驾龄" align="center" prop="drivingAge" />
-      <el-table-column label="生日" align="center" prop="birthday" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.birthday, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="联系方式" align="center" prop="tel" />
-      <el-table-column label="邮箱" align="center" prop="mail" />
-      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="驾驶员编号" align="center" prop="did" />
+      <el-table-column label="车辆类型" align="center" prop="cartype" />
+      <el-table-column label="实验环境" align="center" prop="environment" />
+      <el-table-column label="实验备注" align="center" prop="envRemark" />
+      <el-table-column label="开始时间" align="center" prop="starttime" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -103,14 +91,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['data:driver:edit']"
+            v-hasPermi="['data:simulation:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['data:driver:remove']"
+            v-hasPermi="['data:simulation:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -124,39 +112,23 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改驾驶员对话框 -->
+    <!-- 添加或修改驾驶实验对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="驾驶员姓名" prop="driverName">
-          <el-input v-model="form.driverName" placeholder="请输入驾驶员姓名" />
+        <el-form-item label="驾驶员编号" prop="did">
+          <el-input v-model="form.did" placeholder="请输入驾驶员编号" />
         </el-form-item>
-        <el-form-item label="驾驶员性别(0男 1女 2未知)" prop="sex">
-          <el-select v-model="form.sex" placeholder="请选择驾驶员性别(0男 1女 2未知)">
-            <el-option label="请选择字典生成" value="" />
-          </el-select>
+        <el-form-item label="车辆类型" prop="cartype">
+          <el-input v-model="form.cartype" placeholder="请输入车辆类型" />
         </el-form-item>
-        <el-form-item label="年龄" prop="age">
-          <el-input v-model="form.age" placeholder="请输入年龄" />
+        <el-form-item label="实验环境" prop="environment">
+          <el-input v-model="form.environment" placeholder="请输入实验环境" />
         </el-form-item>
-        <el-form-item label="驾龄" prop="drivingAge">
-          <el-input v-model="form.drivingAge" placeholder="请输入驾龄" />
+        <el-form-item label="实验备注" prop="envRemark">
+          <el-input v-model="form.envRemark" placeholder="请输入实验备注" />
         </el-form-item>
-        <el-form-item label="生日" prop="birthday">
-          <el-date-picker clearable size="small" style="width: 200px"
-            v-model="form.birthday"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="选择生日">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="联系方式" prop="tel">
-          <el-input v-model="form.tel" placeholder="请输入联系方式" />
-        </el-form-item>
-        <el-form-item label="邮箱" prop="mail">
-          <el-input v-model="form.mail" placeholder="请输入邮箱" />
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+        <el-form-item label="开始时间" prop="starttime">
+          <el-input v-model="form.starttime" placeholder="请输入开始时间" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -168,10 +140,12 @@
 </template>
 
 <script>
-import { listDriver, getDriver, delDriver, addDriver, updateDriver, exportDriver } from "@/api/data/driver";
+import { listSimulation, getSimulation, delSimulation, addSimulation, updateSimulation, exportSimulation } from "@/api/data/simulation";
 
 export default {
-  name: "Driver",
+  name: "Simulation",
+  components: {
+  },
   data() {
     return {
       // 遮罩层
@@ -186,8 +160,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 驾驶员表格数据
-      driverList: [],
+      // 驾驶实验表格数据
+      simulationList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -196,24 +170,26 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        driverName: null,
-        sex: null,
-        age: null,
-        drivingAge: null,
+        did: null,
+        cartype: null,
+        environment: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        driverName: [
-          { required: true, message: "驾驶员姓名不能为空", trigger: "blur" }
+        did: [
+          { required: true, message: "驾驶员编号不能为空", trigger: "blur" }
         ],
-        age: [
-          { required: true, message: "年龄不能为空", trigger: "blur" }
+        cartype: [
+          { required: true, message: "车辆类型不能为空", trigger: "blur" }
         ],
-        drivingAge: [
-          { required: true, message: "驾龄不能为空", trigger: "blur" }
+        environment: [
+          { required: true, message: "实验环境不能为空", trigger: "blur" }
         ],
+        starttime: [
+          { required: true, message: "开始时间不能为空", trigger: "blur" }
+        ]
       }
     };
   },
@@ -221,11 +197,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询驾驶员列表 */
+    /** 查询驾驶实验列表 */
     getList() {
       this.loading = true;
-      listDriver(this.queryParams).then(response => {
-        this.driverList = response.rows;
+      listSimulation(this.queryParams).then(response => {
+        this.simulationList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -239,14 +215,11 @@ export default {
     reset() {
       this.form = {
         id: null,
-        driverName: null,
-        sex: null,
-        age: null,
-        drivingAge: null,
-        birthday: null,
-        tel: null,
-        mail: null,
-        remark: null
+        did: null,
+        cartype: null,
+        environment: null,
+        envRemark: null,
+        starttime: null
       };
       this.resetForm("form");
     },
@@ -270,16 +243,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加驾驶员";
+      this.title = "添加驾驶实验";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getDriver(id).then(response => {
+      getSimulation(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改驾驶员";
+        this.title = "修改驾驶实验";
       });
     },
     /** 提交按钮 */
@@ -287,20 +260,16 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateDriver(this.form).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
-              }
+            updateSimulation(this.form).then(response => {
+              this.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
             });
           } else {
-            addDriver(this.form).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              }
+            addSimulation(this.form).then(response => {
+              this.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
             });
           }
         }
@@ -309,29 +278,29 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除驾驶员编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm('是否确认删除驾驶实验编号为"' + ids + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return delDriver(ids);
+          return delSimulation(ids);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有驾驶员数据项?', "警告", {
+      this.$confirm('是否确认导出所有驾驶实验数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return exportDriver(queryParams);
+          return exportSimulation(queryParams);
         }).then(response => {
           this.download(response.msg);
-        }).catch(function() {});
+        })
     }
   }
 };
