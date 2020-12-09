@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lym.information.mapper.SysDriverMapper">
+
+    <resultMap type="SysDriver" id="SysDriverResult">
+        <result property="id"    column="id"    />
+        <result property="driverName"    column="driver_name"    />
+        <result property="sex"    column="sex"    />
+        <result property="age"    column="age"    />
+        <result property="drivingAge"    column="driving_age"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="tel"    column="tel"    />
+        <result property="mail"    column="mail"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSysDriverVo">
+        select id, driver_name, sex, age, driving_age, birthday, tel, mail, remark from sys_driver
+    </sql>
+
+    <select id="selectSysDriverList" parameterType="SysDriver" resultMap="SysDriverResult">
+        <include refid="selectSysDriverVo"/>
+        <where>
+            <if test="driverName != null  and driverName != ''"> and driver_name like concat('%', #{driverName}, '%')</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="remark != null  and remark != ''"> and remark like concat('%', #{remark}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectSysDriverById" parameterType="Long" resultMap="SysDriverResult">
+        <include refid="selectSysDriverVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysDriver" parameterType="SysDriver" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_driver
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="driverName != null and driverName != ''">driver_name,</if>
+            <if test="sex != null and sex != ''">sex,</if>
+            <if test="age != null">age,</if>
+            <if test="drivingAge != null">driving_age,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="tel != null">tel,</if>
+            <if test="mail != null">mail,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="driverName != null and driverName != ''">#{driverName},</if>
+            <if test="sex != null and sex != ''">#{sex},</if>
+            <if test="age != null">#{age},</if>
+            <if test="drivingAge != null">#{drivingAge},</if>
+            <if test="birthday != null">#{birthday},</if>
+            <if test="tel != null">#{tel},</if>
+            <if test="mail != null">#{mail},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysDriver" parameterType="SysDriver">
+        update sys_driver
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="driverName != null and driverName != ''">driver_name = #{driverName},</if>
+            <if test="sex != null and sex != ''">sex = #{sex},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="drivingAge != null">driving_age = #{drivingAge},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="tel != null">tel = #{tel},</if>
+            <if test="mail != null">mail = #{mail},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysDriverById" parameterType="Long">
+        delete from sys_driver where id = #{id}
+    </delete>
+
+    <delete id="deleteSysDriverByIds" parameterType="String">
+        delete from sys_driver where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

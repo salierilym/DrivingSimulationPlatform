@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lym.information.mapper.SysCarMapper">
+
+    <resultMap type="SysCar" id="SysCarResult">
+        <result property="id"    column="id"    />
+        <result property="carName"    column="car_name"    />
+        <result property="carType"    column="car_type"    />
+        <result property="carLength"    column="car_length"    />
+        <result property="carWidth"    column="car_width"    />
+        <result property="carHeight"    column="car_height"    />
+        <result property="carWheelbase"    column="car_wheelbase"    />
+        <result property="carMaxtorque"    column="car_maxtorque"    />
+        <result property="carMaxrpm"    column="car_maxrpm"    />
+        <result property="carDifferential"    column="car_differential"    />
+    </resultMap>
+
+    <sql id="selectSysCarVo">
+        select id, car_name, car_type, car_length, car_width, car_height, car_wheelbase, car_maxtorque, car_maxrpm, car_differential from sys_car
+    </sql>
+
+    <select id="selectSysCarList" parameterType="SysCar" resultMap="SysCarResult">
+        <include refid="selectSysCarVo"/>
+        <where>
+            <if test="carName != null  and carName != ''"> and car_name like concat('%', #{carName}, '%')</if>
+            <if test="carType != null  and carType != ''"> and car_type = #{carType}</if>
+        </where>
+    </select>
+
+    <select id="selectSysCarById" parameterType="Long" resultMap="SysCarResult">
+        <include refid="selectSysCarVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysCar" parameterType="SysCar" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_car
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="carName != null and carName != ''">car_name,</if>
+            <if test="carType != null and carType != ''">car_type,</if>
+            <if test="carLength != null">car_length,</if>
+            <if test="carWidth != null">car_width,</if>
+            <if test="carHeight != null">car_height,</if>
+            <if test="carWheelbase != null">car_wheelbase,</if>
+            <if test="carMaxtorque != null">car_maxtorque,</if>
+            <if test="carMaxrpm != null">car_maxrpm,</if>
+            <if test="carDifferential != null">car_differential,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="carName != null and carName != ''">#{carName},</if>
+            <if test="carType != null and carType != ''">#{carType},</if>
+            <if test="carLength != null">#{carLength},</if>
+            <if test="carWidth != null">#{carWidth},</if>
+            <if test="carHeight != null">#{carHeight},</if>
+            <if test="carWheelbase != null">#{carWheelbase},</if>
+            <if test="carMaxtorque != null">#{carMaxtorque},</if>
+            <if test="carMaxrpm != null">#{carMaxrpm},</if>
+            <if test="carDifferential != null">#{carDifferential},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysCar" parameterType="SysCar">
+        update sys_car
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="carName != null and carName != ''">car_name = #{carName},</if>
+            <if test="carType != null and carType != ''">car_type = #{carType},</if>
+            <if test="carLength != null">car_length = #{carLength},</if>
+            <if test="carWidth != null">car_width = #{carWidth},</if>
+            <if test="carHeight != null">car_height = #{carHeight},</if>
+            <if test="carWheelbase != null">car_wheelbase = #{carWheelbase},</if>
+            <if test="carMaxtorque != null">car_maxtorque = #{carMaxtorque},</if>
+            <if test="carMaxrpm != null">car_maxrpm = #{carMaxrpm},</if>
+            <if test="carDifferential != null">car_differential = #{carDifferential},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysCarById" parameterType="Long">
+        delete from sys_car where id = #{id}
+    </delete>
+
+    <delete id="deleteSysCarByIds" parameterType="String">
+        delete from sys_car where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

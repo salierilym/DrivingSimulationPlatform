@@ -4,16 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ruoyi</groupId>
-    <artifactId>ruoyi</artifactId>
+    <groupId>com.lym</groupId>
+    <artifactId>lym</artifactId>
     <version>3.2.1</version>
 
-    <name>ruoyi</name>
-    <url>http://www.ruoyi.vip</url>
+    <name>lym</name>
     <description>驾驶仿真信息数据服务平台</description>
 
     <properties>
-        <ruoyi.version>3.2.1</ruoyi.version>
+        <lym.version>3.2.1</lym.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -180,62 +179,62 @@
 
             <!-- 定时任务-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-quartz</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.lym</groupId>
+                <artifactId>lym-quartz</artifactId>
+                <version>${lym.version}</version>
             </dependency>
 
             <!-- 代码生成-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-generator</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.lym</groupId>
+                <artifactId>lym-generator</artifactId>
+                <version>${lym.version}</version>
             </dependency>
 
             <!-- 核心模块-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-framework</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.lym</groupId>
+                <artifactId>lym-framework</artifactId>
+                <version>${lym.version}</version>
             </dependency>
 
             <!-- 系统模块-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-system</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.lym</groupId>
+                <artifactId>lym-system</artifactId>
+                <version>${lym.version}</version>
             </dependency>
 
             <!-- 通用工具-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-common</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.lym</groupId>
+                <artifactId>lym-common</artifactId>
+                <version>${lym.version}</version>
             </dependency>
             <!-- 驾驶实验数据管理模块-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-data</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.lym</groupId>
+                <artifactId>lym-data</artifactId>
+                <version>${lym.version}</version>
             </dependency>
             <!-- 驾驶实验信息管理模块-->
             <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-information</artifactId>
-                <version>${ruoyi.version}</version>
+                <groupId>com.lym</groupId>
+                <artifactId>lym-information</artifactId>
+                <version>${lym.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <modules>
-        <module>ruoyi-admin</module>
-        <module>ruoyi-framework</module>
-        <module>ruoyi-system</module>
-        <module>ruoyi-quartz</module>
-        <module>ruoyi-generator</module>
-        <module>ruoyi-common</module>
-        <module>ruoyi-data</module>
-        <module>ruoyi-information</module>
+        <module>lym-admin</module>
+        <module>lym-framework</module>
+        <module>lym-system</module>
+        <module>lym-quartz</module>
+        <module>lym-generator</module>
+        <module>lym-common</module>
+        <module>lym-data</module>
+        <module>lym-information</module>
     </modules>
     <packaging>pom</packaging>
 
