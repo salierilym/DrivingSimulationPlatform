@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.information.mapper.SysEnvironmentMapper">
+    
+    <resultMap type="SysEnvironment" id="SysEnvironmentResult">
+        <result property="id"    column="id"    />
+        <result property="envName"    column="env_name"    />
+        <result property="mapName"    column="map_name"    />
+        <result property="envBackground"    column="env_background"    />
+    </resultMap>
+
+    <sql id="selectSysEnvironmentVo">
+        select id, env_name, map_name, env_background from sys_environment
+    </sql>
+
+    <select id="selectSysEnvironmentList" parameterType="SysEnvironment" resultMap="SysEnvironmentResult">
+        <include refid="selectSysEnvironmentVo"/>
+        <where>  
+            <if test="envName != null  and envName != ''"> and env_name like concat('%', #{envName}, '%')</if>
+            <if test="mapName != null  and mapName != ''"> and map_name like concat('%', #{mapName}, '%')</if>
+            <if test="envBackground != null  and envBackground != ''"> and env_background = #{envBackground}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysEnvironmentById" parameterType="Long" resultMap="SysEnvironmentResult">
+        <include refid="selectSysEnvironmentVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysEnvironment" parameterType="SysEnvironment" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_environment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="envName != null and envName != ''">env_name,</if>
+            <if test="mapName != null and mapName != ''">map_name,</if>
+            <if test="envBackground != null">env_background,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="envName != null and envName != ''">#{envName},</if>
+            <if test="mapName != null and mapName != ''">#{mapName},</if>
+            <if test="envBackground != null">#{envBackground},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysEnvironment" parameterType="SysEnvironment">
+        update sys_environment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="envName != null and envName != ''">env_name = #{envName},</if>
+            <if test="mapName != null and mapName != ''">map_name = #{mapName},</if>
+            <if test="envBackground != null">env_background = #{envBackground},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysEnvironmentById" parameterType="Long">
+        delete from sys_environment where id = #{id}
+    </delete>
+
+    <delete id="deleteSysEnvironmentByIds" parameterType="String">
+        delete from sys_environment where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

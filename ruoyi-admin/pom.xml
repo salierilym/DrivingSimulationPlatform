@@ -95,6 +95,12 @@
         <!-- 信息管理-->
         <dependency>
             <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-information</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+        <!-- 实验数据-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-data</artifactId>
         </dependency>
     </dependencies>

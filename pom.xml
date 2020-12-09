@@ -212,10 +212,16 @@
                 <artifactId>ruoyi-common</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
-            <!-- 驾驶实验信息管理模块-->
+            <!-- 驾驶实验数据管理模块-->
             <dependency>
                 <groupId>com.ruoyi</groupId>
                 <artifactId>ruoyi-data</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+            <!-- 驾驶实验信息管理模块-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-information</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
         </dependencies>
@@ -229,6 +235,7 @@
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
         <module>ruoyi-data</module>
+        <module>ruoyi-information</module>
     </modules>
     <packaging>pom</packaging>
 
