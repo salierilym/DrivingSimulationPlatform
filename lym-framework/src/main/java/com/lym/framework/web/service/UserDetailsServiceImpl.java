@@ -19,7 +19,7 @@ import com.lym.system.service.ISysUserService;
  *
  * @author lym
  */
-@Service
+@Service("myUserDetailService")
 public class UserDetailsServiceImpl implements UserDetailsService
 {
     private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
